@@ -5,9 +5,9 @@ from time import sleep
 with open("config.json") as f:
   config = json.load(f)
 
-payload = {"content": f"{config["message"]}"}
+payload = {"content": f"{config["MESSAGE"]}"}
 errorm = {"content'": "ERROR!"}
-header = {"authorization": f"{config["TOKEN"]"}
+header = {"authorization": f"{config["TOKEN"]}"}
 
 def post():
     Angka = 1
