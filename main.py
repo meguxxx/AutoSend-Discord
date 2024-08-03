@@ -1,32 +1,40 @@
-import requests
+import requests as req
 import json
 from time import sleep
 
 with open("config.json") as f:
   config = json.load(f)
 
-payload = {"content": f"{config["MESSAGE"]}"}
-errorm = {"content'": "ERROR!"}
+if config["TOKEN"] == "" and config["MESSAGE"] == "":
+    raise Exception("TOKEN And MESSAGE Not Found")
+
+
 header = {"authorization": f"{config["TOKEN"]}"}
 
+
 def post():
-    Angka = 1
-    Angkas = 1
+    n = 1
     for i in config["CHANNELID"]:
-        if Angka > len(config["CHANNELID"]):
-            Angka = 1
+        if n > len(config["CHANNELID"]):
+            n = 1
         if i == len(config["CHANNELID"]):
             sleep(config["DELAY"])
+            
         else:
-            url = f"https://discord.com/api/v9/channels/{i}/messages"
-            urll = f"https://discord.com/api/v9/channels/{config["DONE_SEND_CHANNEL_ID"]}/messages"
-            requests.post(url, headers=header, data=payload)
+            req.post(f"https://discord.com/api/v9/channels/{i}/messages",
+                     headers=header,
+                     data={'content': f"{config["MESSAGE"]}"})
             sleep(2)
-            ms = {'content': f'Done Send Message \n Message {Angka} / {len(config["CHANNELID"])} ({Angkas})'}
-            md = f'Done Send Message \n Message {Angka} / {len(config["CHANNELID"])} ({Angkas})'
-            requests.post(urll,headers=header, data=ms)
+
+            req.post(f"https://discord.com/api/v9/channels/{config["OWN_CHANNEL_ID"]}/messages",
+                     headers=header,
+                     data={
+                            'content': f'Done Send Message \n Message {n} / {len(config["CHANNELID"])}'
+                         })
             sleep(10)
-            Angka += 1
-            Angkas += 1
-while True:
-    post()
+            n += 1
+
+if __name__ == "__main__":
+    while True:
+        post()
+        
